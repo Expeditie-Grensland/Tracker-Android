@@ -2,6 +2,7 @@ package nl.expeditiegrensland.tracker
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.Context
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -34,6 +35,9 @@ class LoginActivity : AppCompatActivity() {
         })
 
         sign_in_button.setOnClickListener { attemptLogin() }
+
+        val token = getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE).getString(PREF_KEY_TOKEN, "")
+        Log.v("TokenStatus", token)
     }
 
     private fun attemptLogin() {
@@ -132,13 +136,17 @@ class LoginActivity : AppCompatActivity() {
             return ""
         }
 
-        override fun onPostExecute(result: String) {
+        override fun onPostExecute(token: String) {
             authTask = null
             showProgress(false)
 
-            Log.v("LoginResult", result)
+            Log.v("LoginResult", token)
 
-            if (result != "") {
+            if (token.length > 64) {
+                do {
+                    val preferencesEditor = getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE).edit()
+                    preferencesEditor.putString(PREF_KEY_TOKEN, token)
+                } while (!preferencesEditor.commit())
                 finish()
             } else {
                 username_field.error = getString(R.string.error_incorrect_credentials)
