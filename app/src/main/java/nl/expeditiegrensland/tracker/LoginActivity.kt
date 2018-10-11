@@ -2,7 +2,6 @@ package nl.expeditiegrensland.tracker
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.content.Context
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -12,6 +11,8 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_login.*
+import nl.expeditiegrensland.tracker.helpers.ActivityHelper
+import nl.expeditiegrensland.tracker.helpers.PrefsHelper
 import org.json.JSONObject
 import java.io.DataOutputStream
 import java.net.URL
@@ -24,6 +25,12 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (PrefsHelper.getToken(applicationContext) != "") {
+            ActivityHelper.openMain(applicationContext)
+            finish()
+        }
+
         setContentView(R.layout.activity_login)
 
         password_field.setOnEditorActionListener(TextView.OnEditorActionListener { _, id, _ ->
@@ -36,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
 
         sign_in_button.setOnClickListener { attemptLogin() }
 
-        val token = getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE).getString(PREF_KEY_TOKEN, "")
+        val token = PrefsHelper.getToken(applicationContext)
         Log.v("TokenStatus", token)
     }
 
@@ -143,15 +150,15 @@ class LoginActivity : AppCompatActivity() {
             Log.v("LoginResult", token)
 
             if (token.length > 64) {
-                do {
-                    val preferencesEditor = getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE).edit()
-                    preferencesEditor.putString(PREF_KEY_TOKEN, token)
-                } while (!preferencesEditor.commit())
+                if (!PrefsHelper.setToken(applicationContext, token)) finish()
+
+                ActivityHelper.openMain(applicationContext)
                 finish()
+
             } else {
                 username_field.error = getString(R.string.error_incorrect_credentials)
                 password_field.text.clear()
-                password_field.requestFocus()
+                username_field.requestFocus()
             }
         }
 

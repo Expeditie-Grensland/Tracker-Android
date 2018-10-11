@@ -1,11 +1,15 @@
 <resources>
     <string name="app_name">Expeditie Tracker</string>
 
-    <!-- activity_login -->
-    <string name="prompt_username">Username</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="error_incorrect_credentials">The login is incorrect</string>
-    <string name="error_unknown">Oops, something went wrong</string>
+    <!-- LoginActivity -->
+    <string name="prompt_username">Gebruikersnaam</string>
+    <string name="prompt_password">Wachtwoord</string>
+    <string name="action_sign_in">Log in</string>
+    <string name="error_field_required">Dit veld is verplicht</string>
+    <string name="error_incorrect_credentials">De login is incorrect</string>
+    <string name="error_unknown">Oeps, er ging iets mis</string>
+
+    <!-- MainActivity -->
+    <string name="tab_status">Status</string>
+    <string name="action_sign_out">Log uit</string>
 </resources>
