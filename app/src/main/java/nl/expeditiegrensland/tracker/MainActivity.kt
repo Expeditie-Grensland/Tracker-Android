@@ -10,7 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import nl.expeditiegrensland.tracker.helpers.ActivityHelper
-import nl.expeditiegrensland.tracker.helpers.PrefsHelper
+import nl.expeditiegrensland.tracker.helpers.PreferenceHelper
 
 class MainActivity : AppCompatActivity() {
 
@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         val id = item.itemId
 
         if (id == R.id.action_sign_out) {
-            if (PrefsHelper.removeToken(applicationContext)) {
+            if (PreferenceHelper.removeToken(applicationContext)) {
                 ActivityHelper.openLogin(applicationContext)
                 finish()
             }

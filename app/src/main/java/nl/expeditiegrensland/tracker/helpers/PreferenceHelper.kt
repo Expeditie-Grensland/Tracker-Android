@@ -3,7 +3,7 @@ package nl.expeditiegrensland.tracker.helpers
 import android.content.Context
 import nl.expeditiegrensland.tracker.Constants
 
-object PrefsHelper {
+object PreferenceHelper {
     private fun getPreferences(context: Context?) = context
             ?.getSharedPreferences(Constants.PREF_FILE, Context.MODE_PRIVATE)
 

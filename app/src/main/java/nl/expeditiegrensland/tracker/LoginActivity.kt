@@ -12,7 +12,9 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_login.*
 import nl.expeditiegrensland.tracker.helpers.ActivityHelper
-import nl.expeditiegrensland.tracker.helpers.PrefsHelper
+import nl.expeditiegrensland.tracker.helpers.BackendHelper
+import nl.expeditiegrensland.tracker.helpers.PreferenceHelper
+import nl.expeditiegrensland.tracker.types.AuthenticateResult
 import org.json.JSONObject
 import java.io.DataOutputStream
 import java.net.URL
@@ -26,7 +28,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (PrefsHelper.getToken(applicationContext) != "") {
+        if (PreferenceHelper.getToken(applicationContext) != "") {
             ActivityHelper.openMain(applicationContext)
             finish()
         }
@@ -43,7 +45,7 @@ class LoginActivity : AppCompatActivity() {
 
         sign_in_button.setOnClickListener { attemptLogin() }
 
-        val token = PrefsHelper.getToken(applicationContext)
+        val token = PreferenceHelper.getToken(applicationContext)
         Log.v("TokenStatus", token)
     }
 
@@ -103,58 +105,21 @@ class LoginActivity : AppCompatActivity() {
     }
 
 
-    inner class AuthTask internal constructor(private val username: String, private val password: String) : AsyncTask<Void, Void, String>() {
-        override fun doInBackground(vararg params: Void): String {
-            val url = URL("https://expeditiegrensland.nl/api/authenticate/")
-            val connection = url.openConnection() as HttpsURLConnection
-            connection.requestMethod = "POST"
-            connection.connectTimeout = 20000
-            connection.doOutput = true
+    inner class AuthTask internal constructor(private val username: String, private val password: String) : AsyncTask<Void, Void, AuthenticateResult>() {
+        override fun doInBackground(vararg params: Void) =
+                BackendHelper.authenticate(username, password, ::cancel)
 
-            val json = JSONObject()
-            json.put("username", username)
-            json.put("password", password)
-
-            val data: ByteArray = json.toString().toByteArray(StandardCharsets.UTF_8)
-
-            connection.setRequestProperty("charset", "utf-8")
-            connection.setRequestProperty("content-length", data.size.toString())
-            connection.setRequestProperty("content-type", "application/json")
-
-            try {
-                val dataOutputStream = DataOutputStream(connection.outputStream)
-                dataOutputStream.write(data)
-                dataOutputStream.flush()
-
-                if (connection.responseCode == HttpsURLConnection.HTTP_UNAUTHORIZED)
-                    return ""
-
-                if (connection.responseCode == HttpsURLConnection.HTTP_OK) {
-                    val result = connection.inputStream.bufferedReader().use { it.readText() }
-                    return JSONObject(result).optString("token")
-                }
-
-                cancel(true)
-            } catch (exception: Exception) {
-                Log.e("Login", Log.getStackTraceString(exception))
-                cancel(true)
-            }
-
-            return ""
-        }
-
-        override fun onPostExecute(token: String) {
+        override fun onPostExecute(result: AuthenticateResult) {
             authTask = null
             showProgress(false)
 
-            Log.v("LoginResult", token)
+            Log.v("LoginResult", result.toString())
 
-            if (token.length > 64) {
-                if (!PrefsHelper.setToken(applicationContext, token)) finish()
+            if (result.success && result.token.length > 64) {
+                if (!PreferenceHelper.setToken(applicationContext, result.token)) finish()
 
                 ActivityHelper.openMain(applicationContext)
                 finish()
-
             } else {
                 username_field.error = getString(R.string.error_incorrect_credentials)
                 password_field.text.clear()
