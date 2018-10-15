@@ -11,33 +11,45 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.nio.charset.StandardCharsets
 
+enum class RequestType {
+    GET, POST
+}
+
 object BackendHelper {
-    private fun postRequest(relativeURL: String, json: JSONObject): BackendResult<JSONObject> {
+    private fun request(requestType: RequestType, relativeURL: String, json: JSONObject? = null): BackendResult<JSONObject> {
         val url = URL(Constants.BACKEND_URL + relativeURL)
-        val data: ByteArray = json.toString().toByteArray(StandardCharsets.UTF_8)
 
         var responseCode: Int? = null
         var content: JSONObject? = null
 
         try {
             val connection = url.openConnection() as HttpURLConnection
-
-            connection.requestMethod = "POST"
             connection.connectTimeout = 10000
-            connection.doOutput = true
 
-            connection.setRequestProperty("charset", "utf-8")
-            connection.setRequestProperty("content-length", data.size.toString())
-            connection.setRequestProperty("content-type", "application/json")
+            when (requestType) {
+                RequestType.GET -> {
+                    connection.requestMethod = "GET"
+                }
+                RequestType.POST -> {
+                    val data: ByteArray = json.toString().toByteArray(StandardCharsets.UTF_8)
 
-            val dataOutputStream = DataOutputStream(connection.outputStream)
-            dataOutputStream.write(data)
-            dataOutputStream.flush()
+                    connection.requestMethod = "POST"
+                    connection.doOutput = true
+
+                    connection.setRequestProperty("charset", "utf-8")
+                    connection.setRequestProperty("content-length", data.size.toString())
+                    connection.setRequestProperty("content-type", "application/json")
+
+                    val dataOutputStream = DataOutputStream(connection.outputStream)
+                    dataOutputStream.write(data)
+                    dataOutputStream.flush()
+                }
+            }
 
             responseCode = connection.responseCode
             content = JSONObject(connection.inputStream.bufferedReader().use { it.readText() })
         } catch (err: Throwable) {
-            Log.e("LOGIN", "ERRORERRORERROR")
+            Log.e("BACKEND", Log.getStackTraceString(err))
         }
 
         return BackendResult(
@@ -49,6 +61,12 @@ object BackendHelper {
                         ?: JSONObject()
         )
     }
+
+    private fun getRequest(relativeURL: String) =
+            request(RequestType.GET, relativeURL)
+
+    private fun postRequest(relativeURL: String, json: JSONObject) =
+            request(RequestType.POST, relativeURL, json)
 
     fun authenticate(username: String, password: String, cancel: (Boolean) -> Boolean): AuthenticateResult {
         val json = JSONObject()
