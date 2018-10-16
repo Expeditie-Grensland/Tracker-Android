@@ -1,17 +1,15 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "nl.expeditiegrensland.tracker"
+        applicationId 'nl.expeditiegrensland.tracker'
         minSdkVersion 23
         targetSdkVersion 28
         versionCode 1
-        versionName "1.0"
+        versionName '1.0'
     }
     buildTypes {
         release {
