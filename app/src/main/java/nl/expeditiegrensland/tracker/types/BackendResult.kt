@@ -1,6 +1,6 @@
 package nl.expeditiegrensland.tracker.types
 
-class BackendResult<T> (
+class BackendResult (
         val responseCode: Int,
-        val content: T
+        val content: String? = null
 )

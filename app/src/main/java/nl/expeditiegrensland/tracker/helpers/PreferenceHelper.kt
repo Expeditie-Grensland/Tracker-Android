@@ -7,19 +7,27 @@ object PreferenceHelper {
     private fun getPreferences(context: Context?) = context
             ?.getSharedPreferences(Constants.PREF_FILE, Context.MODE_PRIVATE)
 
-    fun getToken(context: Context?) = getPreferences(context)
-            ?.getString(Constants.PREF_KEY_TOKEN, "")
-            ?: ""
+    private fun getString(context: Context?, key: String, default: String = "") = getPreferences(context)
+            ?.getString(key, default)
+            ?: default
 
-    fun setToken(context: Context?, value: String) = getPreferences(context)
+    private fun setString(context: Context?, key: String, value: String) = getPreferences(context)
             ?.edit()
-            ?.putString(Constants.PREF_KEY_TOKEN, value)
+            ?.putString(key, value)
             ?.commit()
             ?: false
 
-    fun removeToken(context: Context?) = getPreferences(context)
+    private fun remove(context: Context?, key: String) = getPreferences(context)
             ?.edit()
-            ?.remove(Constants.PREF_KEY_TOKEN)
+            ?.remove(key)
             ?.commit()
             ?: false
+
+    fun getToken(context: Context?) = getString(context, Constants.PREF_KEY_TOKEN)
+    fun setToken(context: Context?, value: String) = setString(context, Constants.PREF_KEY_TOKEN, value)
+    fun removeToken(context: Context?) = remove(context, Constants.PREF_KEY_TOKEN)
+
+    fun getExpeditie(context: Context?) = getString(context, Constants.PREF_KEY_EXPEDITIE)
+    fun setExpeditie(context: Context?, value: String) = setString(context, Constants.PREF_KEY_EXPEDITIE, value)
+    fun removeExpeditie(context: Context?) = remove(context, Constants.PREF_KEY_EXPEDITIE)
 }

@@ -15,11 +15,8 @@ import nl.expeditiegrensland.tracker.helpers.ActivityHelper
 import nl.expeditiegrensland.tracker.helpers.BackendHelper
 import nl.expeditiegrensland.tracker.helpers.PreferenceHelper
 import nl.expeditiegrensland.tracker.types.AuthenticateResult
-import org.json.JSONObject
-import java.io.DataOutputStream
-import java.net.URL
-import java.nio.charset.StandardCharsets
-import javax.net.ssl.HttpsURLConnection
+import nl.expeditiegrensland.tracker.types.AuthenticationException
+import nl.expeditiegrensland.tracker.types.BackendResult
 
 
 class LoginActivity : AppCompatActivity() {
@@ -46,6 +43,7 @@ class LoginActivity : AppCompatActivity() {
         sign_in_button.setOnClickListener { attemptLogin() }
 
         val token = PreferenceHelper.getToken(applicationContext)
+
         Log.v("TokenStatus", token)
     }
 
@@ -106,8 +104,16 @@ class LoginActivity : AppCompatActivity() {
 
 
     inner class AuthTask internal constructor(private val username: String, private val password: String) : AsyncTask<Void, Void, AuthenticateResult>() {
-        override fun doInBackground(vararg params: Void) =
-                BackendHelper.authenticate(username, password, ::cancel)
+        override fun doInBackground(vararg params: Void): AuthenticateResult {
+            val backendResult = BackendHelper.authenticate(username, password, ::cancel)
+            if (backendResult.success && backendResult.token.length > 64)
+                try {
+                    backendResult.expedities = BackendHelper.getExpedities(backendResult.token)
+                } catch (err: AuthenticationException) {
+                    cancel(true)
+                }
+            return backendResult
+        }
 
         override fun onPostExecute(result: AuthenticateResult) {
             authTask = null
@@ -116,9 +122,9 @@ class LoginActivity : AppCompatActivity() {
             Log.v("LoginResult", result.toString())
 
             if (result.success && result.token.length > 64) {
-                if (!PreferenceHelper.setToken(applicationContext, result.token)) finish()
+                if (PreferenceHelper.setToken(applicationContext, result.token))
+                    ActivityHelper.openExpeditieSelect(applicationContext, result.expedities)
 
-                ActivityHelper.openMain(applicationContext)
                 finish()
             } else {
                 username_field.error = getString(R.string.error_incorrect_credentials)
