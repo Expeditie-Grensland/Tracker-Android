@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_expeditie_select.*
-import nl.expeditiegrensland.tracker.dummy.DummyContent
 import nl.expeditiegrensland.tracker.types.Expeditie
 
 class ExpeditieSelectActivity : AppCompatActivity() {
@@ -16,10 +15,10 @@ class ExpeditieSelectActivity : AppCompatActivity() {
         setContentView(R.layout.activity_expeditie_select)
 
         if (recyclerView is RecyclerView)
-            recyclerView.adapter = ExpeditieCardRecyclerViewAdapter(DummyContent.ITEMS, ::onListFragmentInteraction)
+            recyclerView.adapter = ExpeditieCardRecyclerViewAdapter(expedities, ::onListFragmentInteraction)
     }
 
-    private fun onListFragmentInteraction(item: DummyContent.DummyItem?) {
+    private fun onListFragmentInteraction(item: Expeditie?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

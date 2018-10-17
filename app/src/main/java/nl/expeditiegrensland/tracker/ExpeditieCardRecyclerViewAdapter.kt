@@ -5,27 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-
-
-import nl.expeditiegrensland.tracker.dummy.DummyContent.DummyItem
-
 import kotlinx.android.synthetic.main.fragment_expeditie_card.view.*
+import nl.expeditiegrensland.tracker.types.Expeditie
 
 /**
- * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
- * specified [].
  * TODO: Replace the implementation with code for your data type.
  */
-class ExpeditieCardRecyclerViewAdapter(
-        private val mValues: List<DummyItem>,
-        private val mListener: (DummyItem?) -> Unit)
+class ExpeditieCardRecyclerViewAdapter(private val mValues: List<Expeditie>,
+                                       private val mListener: (Expeditie?) -> Unit)
     : RecyclerView.Adapter<ExpeditieCardRecyclerViewAdapter.ViewHolder>() {
 
     private val mOnClickListener: View.OnClickListener
 
     init {
         mOnClickListener = View.OnClickListener { v ->
-            val item = v.tag as DummyItem
+            val item = v.tag as Expeditie
             // Notify the active callbacks interface (the activity, if the fragment is attached to
             // one) that an item has been selected.
             mListener(item)
@@ -40,8 +34,7 @@ class ExpeditieCardRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mValues[position]
-        holder.mIdView.text = item.id
-        holder.mContentView.text = item.content
+        holder.mContentView.text = item.name
 
         with(holder.mView) {
             tag = item
@@ -52,7 +45,6 @@ class ExpeditieCardRecyclerViewAdapter(
     override fun getItemCount(): Int = mValues.size
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val mIdView: TextView = mView.item_number
         val mContentView: TextView = mView.content
 
         override fun toString(): String {
