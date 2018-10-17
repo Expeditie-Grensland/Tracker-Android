@@ -3,6 +3,7 @@ package nl.expeditiegrensland.tracker
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import kotlinx.android.synthetic.main.activity_expeditie_select.*
 import nl.expeditiegrensland.tracker.types.Expeditie
 
@@ -19,6 +20,6 @@ class ExpeditieSelectActivity : AppCompatActivity() {
     }
 
     private fun onListFragmentInteraction(item: Expeditie?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Log.v("EXPEDITIE", item?.let { it.toString() } ?: "NOEXPEDITIE")
     }
 }

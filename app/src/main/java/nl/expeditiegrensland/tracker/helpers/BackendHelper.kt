@@ -103,9 +103,8 @@ object BackendHelper {
             val id = jsonExpeditie.getString("_id")
             val name = jsonExpeditie.getString("name")
             val subtitle = jsonExpeditie.getString("subtitle")
-            val sequenceNumber = jsonExpeditie.getString("sequenceNumber")
 
-            Expeditie(id, name, subtitle, sequenceNumber)
+            Expeditie(id, name, subtitle)
         } catch (err: JSONException) {
             Log.e("GET_EXPEDITIES", Log.getStackTraceString(err))
             null
