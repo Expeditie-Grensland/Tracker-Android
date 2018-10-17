@@ -1,7 +1,10 @@
 package nl.expeditiegrensland.tracker.types
 
-class Expeditie (
-        val name: String,
-        val subtitle: String,
-        val sequenceNumber: String
-)
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
+data class Expeditie(val id: String,
+                     val name: String,
+                     val subtitle: String,
+                     val sequenceNumber: String) : Parcelable

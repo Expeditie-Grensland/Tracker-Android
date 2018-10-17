@@ -16,7 +16,7 @@ import nl.expeditiegrensland.tracker.helpers.BackendHelper
 import nl.expeditiegrensland.tracker.helpers.PreferenceHelper
 import nl.expeditiegrensland.tracker.types.AuthenticateResult
 import nl.expeditiegrensland.tracker.types.AuthenticationException
-import nl.expeditiegrensland.tracker.types.BackendResult
+import nl.expeditiegrensland.tracker.types.BackendException
 
 
 class LoginActivity : AppCompatActivity() {
@@ -105,14 +105,21 @@ class LoginActivity : AppCompatActivity() {
 
     inner class AuthTask internal constructor(private val username: String, private val password: String) : AsyncTask<Void, Void, AuthenticateResult>() {
         override fun doInBackground(vararg params: Void): AuthenticateResult {
-            val backendResult = BackendHelper.authenticate(username, password, ::cancel)
-            if (backendResult.success && backendResult.token.length > 64)
-                try {
-                    backendResult.expedities = BackendHelper.getExpedities(backendResult.token)
-                } catch (err: AuthenticationException) {
-                    cancel(true)
+            try {
+                val result = BackendHelper.authenticate(username, password)
+
+                if (result.success && result.token.length > 64) {
+                    val expedities = BackendHelper.getExpedities(result.token)
+                    return result.copy(expedities = expedities)
                 }
-            return backendResult
+                return result
+            } catch (err: AuthenticationException) {
+                cancel(true)
+            } catch (err: BackendException) {
+                cancel(true)
+            }
+
+            return AuthenticateResult(false)
         }
 
         override fun onPostExecute(result: AuthenticateResult) {
@@ -123,7 +130,7 @@ class LoginActivity : AppCompatActivity() {
 
             if (result.success && result.token.length > 64) {
                 if (PreferenceHelper.setToken(applicationContext, result.token))
-                    ActivityHelper.openExpeditieSelect(applicationContext, result.expedities)
+                    ActivityHelper.openExpeditieSelect(applicationContext, result.expedities?.expedities)
 
                 finish()
             } else {
