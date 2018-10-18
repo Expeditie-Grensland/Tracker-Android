@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_expeditie_card.view.*
+import nl.expeditiegrensland.tracker.tasks.DownloadImageTask
 import nl.expeditiegrensland.tracker.types.Expeditie
 
 
@@ -25,6 +26,10 @@ class ExpeditieCardRecyclerViewAdapter(private val expedities: List<Expeditie>,
         with(holder.view) {
             name.text = item.name
             subtitle.text = item.subtitle
+
+            DownloadImageTask(image)
+                    .execute(Constants.BASE_URL + item.image)
+
 
             setOnClickListener {
                 mListener(item)

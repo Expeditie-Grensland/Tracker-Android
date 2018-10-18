@@ -71,7 +71,7 @@ object BackendHelper {
     private fun postRequest(relativeURL: String, json: JSONObject, token: String? = null) =
             request(RequestType.POST, relativeURL, json, token)
 
-    fun authenticate(username: String, password: String): AuthenticateResult {
+    fun authenticate(username: String, password: String): AuthResult {
         val json = JSONObject()
                 .put("username", username)
                 .put("password", password)
@@ -79,13 +79,13 @@ object BackendHelper {
         val (responseCode, jsonContent) = postRequest("/authenticate", json)
 
         if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED)
-            return AuthenticateResult(false)
+            return AuthResult(false)
 
         if (responseCode == HttpURLConnection.HTTP_OK && jsonContent != null)
             try {
                 val content = JSONObject(jsonContent)
 
-                return AuthenticateResult(
+                return AuthResult(
                         token = content.getString("token"),
                         name = content.getString("name")
                 )
@@ -100,11 +100,14 @@ object BackendHelper {
         if (jsonExpeditie == null) return null
 
         return try {
-            val id = jsonExpeditie.getString("_id")
-            val name = jsonExpeditie.getString("name")
-            val subtitle = jsonExpeditie.getString("subtitle")
-
-            Expeditie(id, name, subtitle)
+            jsonExpeditie.run{
+                Expeditie(
+                        getString("id"),
+                        getString("name"),
+                        getString("subtitle"),
+                        getString("image")
+                )
+            }
         } catch (err: JSONException) {
             Log.e("GET_EXPEDITIES", Log.getStackTraceString(err))
             null
@@ -115,7 +118,7 @@ object BackendHelper {
         val (responseCode, jsonContent) = getRequest("/expedities", token)
 
         if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED)
-            throw AuthenticationException()
+            throw AuthException()
 
         if (responseCode == HttpURLConnection.HTTP_OK && jsonContent != null)
             try {

@@ -6,4 +6,5 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Expeditie(val id: String,
                      val name: String,
-                     val subtitle: String) : Parcelable
+                     val subtitle: String,
+                     val image: String) : Parcelable

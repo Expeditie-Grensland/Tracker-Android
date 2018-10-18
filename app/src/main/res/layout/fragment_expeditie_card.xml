@@ -19,7 +19,6 @@
             android:layout_height="0dp"
             android:background="#000"
             android:scaleType="centerCrop"
-            android:src="@drawable/holtemoi"
             android:tint="#7000"
             app:layout_constraintDimensionRatio="H,16:9"
             app:layout_constraintLeft_toLeftOf="parent"

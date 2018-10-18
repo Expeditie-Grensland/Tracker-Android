@@ -2,7 +2,6 @@ package nl.expeditiegrensland.tracker
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
@@ -12,15 +11,12 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_login.*
 import nl.expeditiegrensland.tracker.helpers.ActivityHelper
-import nl.expeditiegrensland.tracker.helpers.BackendHelper
 import nl.expeditiegrensland.tracker.helpers.PreferenceHelper
-import nl.expeditiegrensland.tracker.types.AuthenticateResult
-import nl.expeditiegrensland.tracker.types.AuthenticationException
-import nl.expeditiegrensland.tracker.types.BackendException
+import nl.expeditiegrensland.tracker.tasks.AuthTask
 
 
 class LoginActivity : AppCompatActivity() {
-    private var authTask: AuthTask? = null
+    var authTask: AuthTask? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,12 +79,12 @@ class LoginActivity : AppCompatActivity() {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true)
-            authTask = AuthTask(emailStr, passwordStr)
+            authTask = AuthTask(this, emailStr, passwordStr)
             authTask!!.execute(null as Void?)
         }
     }
 
-    private fun showProgress(show: Boolean) {
+    fun showProgress(show: Boolean) {
         val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
 
         login_progress.visibility = if (show) View.VISIBLE else View.INVISIBLE
@@ -100,51 +96,5 @@ class LoginActivity : AppCompatActivity() {
                         login_progress.visibility = if (show) View.VISIBLE else View.INVISIBLE
                     }
                 })
-    }
-
-
-    inner class AuthTask internal constructor(private val username: String, private val password: String) : AsyncTask<Void, Void, AuthenticateResult>() {
-        override fun doInBackground(vararg params: Void): AuthenticateResult {
-            try {
-                val result = BackendHelper.authenticate(username, password)
-
-                if (result.success && result.token.length > 64) {
-                    val expedities = BackendHelper.getExpedities(result.token)
-                    return result.copy(expedities = expedities)
-                }
-                return result
-            } catch (err: AuthenticationException) {
-                cancel(true)
-            } catch (err: BackendException) {
-                cancel(true)
-            }
-
-            return AuthenticateResult(false)
-        }
-
-        override fun onPostExecute(result: AuthenticateResult) {
-            authTask = null
-            showProgress(false)
-
-            Log.v("LoginResult", result.toString())
-
-            if (result.success && result.token.length > 64) {
-                if (PreferenceHelper.setToken(applicationContext, result.token))
-                    ActivityHelper.openExpeditieSelect(applicationContext, result.expedities?.expedities)
-
-                finish()
-            } else {
-                username_field.error = getString(R.string.error_incorrect_credentials)
-                password_field.text.clear()
-                username_field.requestFocus()
-            }
-        }
-
-        override fun onCancelled() {
-            authTask = null
-            showProgress(false)
-
-            username_field.error = getString(R.string.error_unknown)
-        }
     }
 }
