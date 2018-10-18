@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:cardCornerRadius="8dp"
     android:foreground="?android:attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
@@ -19,37 +21,38 @@
             android:layout_height="0dp"
             android:background="#000"
             android:scaleType="centerCrop"
-            android:tint="#7000"
             app:layout_constraintDimensionRatio="H,16:9"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:layout_marginLeft="@dimen/text_margin"
             android:layout_marginRight="@dimen/text_margin"
-            android:layout_marginBottom="4dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
-            android:textSize="42sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            app:layout_constraintBottom_toTopOf="@id/subtitle"
-            app:layout_constraintLeft_toLeftOf="parent" />
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="2dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/image" />
 
         <TextView
             android:id="@+id/subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
-            android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
-            android:textSize="24sp"
-            android:maxLines="1"
             android:ellipsize="end"
-            app:layout_constraintBottom_toBottomOf="@id/image"
-            app:layout_constraintLeft_toLeftOf="parent" />
+            android:maxLines="1"
+            android:layout_marginLeft="@dimen/text_margin"
+            android:layout_marginRight="@dimen/text_margin"
+            android:layout_marginTop="2dp"
+            android:paddingBottom="@dimen/text_margin"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/name" />
 
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>
