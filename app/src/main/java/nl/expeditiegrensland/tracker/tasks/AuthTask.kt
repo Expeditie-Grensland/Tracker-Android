@@ -21,7 +21,7 @@ class AuthTask(activity: LoginActivity, private val username: String, private va
         try {
             val result = BackendHelper.authenticate(username, password)
 
-            if (result.success && result.token.length > 64) {
+            if (result.success && result.token.isNotEmpty()) {
                 val expedities = BackendHelper.getExpedities(result.token)
                 return result.copy(expedities = expedities)
             }
@@ -44,7 +44,7 @@ class AuthTask(activity: LoginActivity, private val username: String, private va
 
                     Log.v("LoginResult", result.toString())
 
-                    if (result.success && result.token.length > 64) {
+                    if (result.success && result.token.isNotEmpty()) {
                         if (PreferenceHelper.setToken(applicationContext, result.token))
                             ActivityHelper.openExpeditieSelect(applicationContext, result.expedities?.expedities)
 

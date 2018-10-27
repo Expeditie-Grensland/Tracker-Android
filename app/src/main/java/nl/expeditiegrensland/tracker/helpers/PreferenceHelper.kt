@@ -39,7 +39,9 @@ object PreferenceHelper {
 
     fun getExpeditie(context: Context?) =
             try {
-                ProtoBuf.loads<Expeditie>(getString(context, Constants.PREF_KEY_EXPEDITIE))
+                getString(context, Constants.PREF_KEY_EXPEDITIE)?.let {
+                    ProtoBuf.loads<Expeditie>(it)
+                }
             } catch (err: SerializationException) {
                 null
             }

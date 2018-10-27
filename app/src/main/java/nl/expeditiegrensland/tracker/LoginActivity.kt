@@ -20,8 +20,12 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (PreferenceHelper.getToken(applicationContext) != "") {
-            ActivityHelper.openMain(applicationContext)
+        if (PreferenceHelper.getToken(this).isNotEmpty()) {
+            if (PreferenceHelper.getExpeditie(this) != null) {
+                ActivityHelper.openMain(this)
+            } else {
+                ActivityHelper.openExpeditieSelect(this)
+            }
             finish()
         }
 
@@ -47,36 +51,30 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        // Reset errors.
         username_field.error = null
         password_field.error = null
 
-        // Store values at the time of the login attempt.
         val emailStr = username_field.text.toString()
         val passwordStr = password_field.text.toString()
 
         var cancel = false
         var focusView: View? = null
 
-        if (TextUtils.isEmpty(passwordStr)) {
+        if (passwordStr.isEmpty()) {
             password_field.error = getString(R.string.error_field_required)
             focusView = password_field
             cancel = true
         }
 
-        if (TextUtils.isEmpty(emailStr)) {
+        if (emailStr.isEmpty()) {
             username_field.error = getString(R.string.error_field_required)
             focusView = username_field
             cancel = true
         }
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
             focusView?.requestFocus()
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
             showProgress(true)
             authTask = AuthTask(this, emailStr, passwordStr)
             authTask!!.execute(null as Void?)
