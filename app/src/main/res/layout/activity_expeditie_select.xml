@@ -28,12 +28,13 @@
                 app:title="@string/app_name" />
 
             <me.zhanghai.android.materialprogressbar.MaterialProgressBar
-                android:id="@+id/login_progress"
+                android:id="@+id/progress_bar"
                 style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="4dp"
                 android:indeterminate="true"
                 android:visibility="invisible"
+                android:alpha="0"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:mpb_progressStyle="horizontal"
                 app:mpb_useIntrinsicPadding="false" />

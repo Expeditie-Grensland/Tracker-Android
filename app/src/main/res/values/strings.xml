@@ -11,6 +11,7 @@
 
     <!-- MainActivity -->
     <string name="tab_status">Status</string>
+    <string name="action_change_expeditie">Verander van expeditie</string>
     <string name="action_sign_out">Log uit</string>
 
     <!-- TODO: Remove or change this placeholder text -->

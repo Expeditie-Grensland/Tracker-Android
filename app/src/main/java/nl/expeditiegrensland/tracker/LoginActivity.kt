@@ -1,7 +1,5 @@
 package nl.expeditiegrensland.tracker
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
@@ -12,6 +10,7 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_login.*
 import nl.expeditiegrensland.tracker.helpers.ActivityHelper
 import nl.expeditiegrensland.tracker.helpers.PreferenceHelper
+import nl.expeditiegrensland.tracker.helpers.showOrHide
 import nl.expeditiegrensland.tracker.tasks.AuthTask
 
 
@@ -84,17 +83,5 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    fun showProgress(show: Boolean) {
-        val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
-
-        login_progress.visibility = if (show) View.VISIBLE else View.INVISIBLE
-        login_progress.animate()
-                .setDuration(shortAnimTime)
-                .alpha((if (show) 1 else 0).toFloat())
-                .setListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator) {
-                        login_progress.visibility = if (show) View.VISIBLE else View.INVISIBLE
-                    }
-                })
-    }
+    fun showProgress(show: Boolean) = showOrHide(progress_bar, show)
 }

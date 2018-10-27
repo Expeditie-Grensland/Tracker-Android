@@ -96,11 +96,9 @@ object BackendHelper {
         throw BackendException()
     }
 
-    private fun parseExpeditie(jsonExpeditie: JSONObject?): Expeditie? {
-        if (jsonExpeditie == null) return null
-
-        return try {
-            jsonExpeditie.run{
+    private fun parseExpeditie(jsonExpeditie: JSONObject?) =
+        try {
+            jsonExpeditie?.run{
                 Expeditie(
                         getString("id"),
                         getString("name"),
@@ -112,7 +110,6 @@ object BackendHelper {
             Log.e("GET_EXPEDITIES", Log.getStackTraceString(err))
             null
         }
-    }
 
     fun getExpedities(token: String): ExpeditiesResult {
         val (responseCode, jsonContent) = getRequest("/expedities", token)

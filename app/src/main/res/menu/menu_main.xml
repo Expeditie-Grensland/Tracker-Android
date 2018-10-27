@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="nl.expeditiegrensland.tracker.MainActivity">
     <item
+        android:id="@+id/action_change_expeditie"
+        android:orderInCategory="90"
+        android:title="@string/action_change_expeditie"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_sign_out"
         android:orderInCategory="100"
         android:title="@string/action_sign_out"

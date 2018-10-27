@@ -13,8 +13,9 @@ import nl.expeditiegrensland.tracker.types.AuthException
 import nl.expeditiegrensland.tracker.types.BackendException
 import java.lang.ref.WeakReference
 
-class AuthTask(loginActivity: LoginActivity, private val username: String, private val password: String) : AsyncTask<Void, Void, AuthResult>() {
-    private val loginActivityReference: WeakReference<LoginActivity>? = WeakReference(loginActivity)
+class AuthTask(activity: LoginActivity, private val username: String, private val password: String) : AsyncTask<Void, Void, AuthResult>() {
+    private val activityReference: WeakReference<LoginActivity>? =
+            WeakReference(activity)
 
     override fun doInBackground(vararg params: Void): AuthResult {
         try {
@@ -35,7 +36,7 @@ class AuthTask(loginActivity: LoginActivity, private val username: String, priva
     }
 
     override fun onPostExecute(result: AuthResult) {
-        loginActivityReference
+        activityReference
                 ?.get()
                 ?.run {
                     authTask = null
@@ -57,7 +58,7 @@ class AuthTask(loginActivity: LoginActivity, private val username: String, priva
     }
 
     override fun onCancelled() {
-        loginActivityReference
+        activityReference
                 ?.get()
                 ?.run {
                     authTask = null

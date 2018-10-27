@@ -41,19 +41,28 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-
-        if (id == R.id.action_sign_out) {
-            if (PreferenceHelper.removeToken(applicationContext)) {
-                ActivityHelper.openLogin(applicationContext)
-                finish()
+    override fun onOptionsItemSelected(item: MenuItem) =
+            when (item.itemId) {
+                R.id.action_sign_out -> signOut()
+                R.id.action_change_expeditie -> changeExpeditie()
+                else -> super.onOptionsItemSelected(item)
             }
-            return true
-        }
 
-        return super.onOptionsItemSelected(item)
+    private fun signOut(): Boolean {
+        PreferenceHelper.removeExpeditie(this)
+        PreferenceHelper.removeToken(this)
+        ActivityHelper.openLogin(this)
+        finish()
+        return true
     }
+
+    private fun changeExpeditie(): Boolean {
+        PreferenceHelper.removeExpeditie(this)
+        ActivityHelper.openExpeditieSelect(this)
+        finish()
+        return true
+    }
+
 
     inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
