@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import kotlinx.android.synthetic.main.activity_expeditie_select.*
+import nl.expeditiegrensland.tracker.helpers.ActivityHelper
+import nl.expeditiegrensland.tracker.helpers.PreferenceHelper
 import nl.expeditiegrensland.tracker.types.Expeditie
 
 class ExpeditieSelectActivity : AppCompatActivity() {
@@ -20,6 +22,10 @@ class ExpeditieSelectActivity : AppCompatActivity() {
     }
 
     private fun onListFragmentInteraction(item: Expeditie?) {
-        Log.v("EXPEDITIE", item?.let { it.toString() } ?: "NOEXPEDITIE")
+        item?.let {
+            PreferenceHelper.setExpeditie(this, it)
+            ActivityHelper.openMain(this)
+            finish()
+        }
     }
 }

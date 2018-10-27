@@ -13,7 +13,9 @@ class StatusFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_status, container, false)
         val token = PreferenceHelper.getToken(context)
-        rootView.section_label.text = token
+        val expeditieName = PreferenceHelper.getExpeditie(context)?.name
+        rootView.section_label.text = """$token
+$expeditieName"""
         return rootView
     }
 

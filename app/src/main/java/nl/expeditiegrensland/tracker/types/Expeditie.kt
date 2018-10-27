@@ -2,9 +2,12 @@ package nl.expeditiegrensland.tracker.types
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import kotlinx.serialization.SerialId
+import kotlinx.serialization.Serializable
 
 @Parcelize
-data class Expeditie(val id: String,
-                     val name: String,
-                     val subtitle: String,
-                     val image: String) : Parcelable
+@Serializable
+data class Expeditie(@SerialId(1) val id: String,
+                     @SerialId(2) val name: String,
+                     @SerialId(3) val subtitle: String,
+                     @SerialId(4) val image: String) : Parcelable

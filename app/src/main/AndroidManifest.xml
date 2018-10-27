@@ -22,7 +22,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
-        <activity android:name=".ExpeditieSelectActivity" />
+        <activity
+            android:name=".ExpeditieSelectActivity"
+            android:noHistory="true" />
     </application>
 
 </manifest>
