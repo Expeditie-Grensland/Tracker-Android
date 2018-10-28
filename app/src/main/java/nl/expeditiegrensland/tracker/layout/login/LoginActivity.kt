@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.inputmethod.EditorInfo
-import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_login.*
 import nl.expeditiegrensland.tracker.R
 import nl.expeditiegrensland.tracker.helpers.ActivityHelper
@@ -28,6 +27,8 @@ class LoginActivity : AppCompatActivity() {
         }
 
         setContentView(R.layout.activity_login)
+
+        setSupportActionBar(toolbar)
 
         password_field.setOnEditorActionListener { _, id, _ ->
             if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {

@@ -32,9 +32,9 @@
                 style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="4dp"
+                android:alpha="1"
                 android:indeterminate="true"
                 android:visibility="visible"
-                android:alpha="1"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:mpb_progressStyle="horizontal"
                 app:mpb_useIntrinsicPadding="false" />
@@ -48,10 +48,10 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
         android:clipToPadding="false"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
         app:layoutManager="LinearLayoutManager"
         tools:listitem="@layout/fragment_expeditie_card" />
 

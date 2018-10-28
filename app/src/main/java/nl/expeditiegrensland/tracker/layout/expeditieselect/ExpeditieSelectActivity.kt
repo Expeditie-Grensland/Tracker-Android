@@ -2,6 +2,8 @@ package nl.expeditiegrensland.tracker.layout.expeditieselect
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_expeditie_select.*
 import nl.expeditiegrensland.tracker.R
 import nl.expeditiegrensland.tracker.helpers.ActivityHelper
@@ -14,7 +16,27 @@ class ExpeditieSelectActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_expeditie_select)
 
+        setSupportActionBar(toolbar)
+
         GetExpeditiesTask(this).execute()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_expeditie_select, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) =
+            when (item.itemId) {
+                R.id.action_sign_out -> signOut()
+                else -> super.onOptionsItemSelected(item)
+            }
+
+    private fun signOut(): Boolean {
+        PreferenceHelper.removeToken(this)
+        ActivityHelper.openLogin(this)
+        finish()
+        return true
     }
 
     fun showExpedities(expedities: List<Expeditie>) {
