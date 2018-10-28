@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="nl.expeditiegrensland.tracker.MainActivity">
+    tools:context="nl.expeditiegrensland.tracker.layout.main.MainActivity">
     <item
         android:id="@+id/action_change_expeditie"
         android:orderInCategory="90"

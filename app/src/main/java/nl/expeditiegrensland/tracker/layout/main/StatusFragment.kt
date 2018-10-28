@@ -1,4 +1,4 @@
-package nl.expeditiegrensland.tracker
+package nl.expeditiegrensland.tracker.layout.main
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_status.view.*
+import nl.expeditiegrensland.tracker.R
 import nl.expeditiegrensland.tracker.helpers.PreferenceHelper
 
 class StatusFragment : Fragment() {

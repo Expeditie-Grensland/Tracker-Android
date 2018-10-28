@@ -2,8 +2,6 @@ package nl.expeditiegrensland.tracker.backend
 
 import android.util.Log
 import nl.expeditiegrensland.tracker.Constants
-import nl.expeditiegrensland.tracker.backend.types.AuthResponse
-import nl.expeditiegrensland.tracker.backend.types.BackendException
 import nl.expeditiegrensland.tracker.types.Expeditie
 import org.json.JSONArray
 import org.json.JSONException

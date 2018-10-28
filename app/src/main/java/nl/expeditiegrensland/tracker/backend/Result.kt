@@ -1,4 +1,4 @@
-package nl.expeditiegrensland.tracker.backend.types
+package nl.expeditiegrensland.tracker.backend
 
 import android.util.Log
 import nl.expeditiegrensland.tracker.types.Expeditie
@@ -9,21 +9,24 @@ sealed class Result<out V> {
     class Error(val error: BackendException) : Result<Nothing>()
 
     fun <R> runIfValue(action: (V) -> R) =
-            if (this is Result.Value) action(value)
+            if (this is Value) action(value)
             else null
 
     fun <R> runIfError(action: (BackendException) -> R) =
-            if (this is Result.Error) action(error)
+            if (this is Error) action(error)
             else null
 
     companion object {
-        fun <T> catchError(action: () -> T): Result<T> =
+        fun <V> value(value: V): Result<V> = Result.Value(value)
+        fun error(error: BackendException): Result<Nothing> = Result.Error(error)
+
+        fun <V> catchError(action: () -> V): Result<V> =
                 try {
-                    Result.Value(action())
+                    value(action())
                 } catch (error: BackendException) {
                     Log.e("BackendException", error.message)
                     Log.e("BackendException", Log.getStackTraceString(error))
-                    Result.Error(error)
+                    error(error)
                 }
     }
 

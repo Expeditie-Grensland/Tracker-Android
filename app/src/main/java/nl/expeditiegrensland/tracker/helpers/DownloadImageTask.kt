@@ -8,7 +8,7 @@ import android.widget.ImageView
 import java.lang.ref.WeakReference
 
 class DownloadImageTask(imageView: ImageView) : AsyncTask<String, Void, Bitmap>() {
-    private val imageViewReference: WeakReference<ImageView>? = WeakReference(imageView)
+    private val imageViewReference: WeakReference<ImageView> = WeakReference(imageView)
 
     override fun doInBackground(vararg urls: String): Bitmap? =
             try {
@@ -21,10 +21,8 @@ class DownloadImageTask(imageView: ImageView) : AsyncTask<String, Void, Bitmap>(
             }
 
     override fun onPostExecute(result: Bitmap?) {
-        imageViewReference
-                ?.get()
-                ?.run {
-                    setImageBitmap(result)
-                }
+        imageViewReference.get()?.run {
+            setImageBitmap(result)
+        }
     }
 }

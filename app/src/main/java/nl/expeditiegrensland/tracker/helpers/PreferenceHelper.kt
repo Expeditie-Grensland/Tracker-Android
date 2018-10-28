@@ -10,11 +10,11 @@ object PreferenceHelper {
     private fun getPreferences(context: Context?) = context
             ?.getSharedPreferences(Constants.PREF_FILE, Context.MODE_PRIVATE)
 
-    private fun getString(context: Context?, key: String, default: String = "") = getPreferences(context)
+    private fun getString(context: Context?, key: String, default: String? = "") = getPreferences(context)
             ?.getString(key, default)
             ?: default
 
-    private fun setString(context: Context?, key: String, value: String) = getPreferences(context)
+    private fun setString(context: Context?, key: String, value: String?) = getPreferences(context)
             ?.edit()
             ?.putString(key, value)
             ?.commit()
@@ -39,7 +39,7 @@ object PreferenceHelper {
 
     fun getExpeditie(context: Context?) =
             try {
-                getString(context, Constants.PREF_KEY_EXPEDITIE)?.let {
+                getString(context, Constants.PREF_KEY_EXPEDITIE, null)?.let {
                     ProtoBuf.loads<Expeditie>(it)
                 }
             } catch (err: SerializationException) {

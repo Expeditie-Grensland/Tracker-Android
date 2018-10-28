@@ -1,12 +1,13 @@
-package nl.expeditiegrensland.tracker
+package nl.expeditiegrensland.tracker.layout.expeditieselect
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_expeditie_select.*
+import nl.expeditiegrensland.tracker.Constants
+import nl.expeditiegrensland.tracker.R
 import nl.expeditiegrensland.tracker.helpers.ActivityHelper
+import nl.expeditiegrensland.tracker.helpers.HelperFunctions
 import nl.expeditiegrensland.tracker.helpers.PreferenceHelper
-import nl.expeditiegrensland.tracker.helpers.showOrHide
-import nl.expeditiegrensland.tracker.backend.tasks.GetExpeditiesTask
 import nl.expeditiegrensland.tracker.types.Expeditie
 
 class ExpeditieSelectActivity : AppCompatActivity() {
@@ -14,21 +15,14 @@ class ExpeditieSelectActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_expeditie_select)
 
-        val expedities =
-                intent.getParcelableArrayListExtra<Expeditie>(Constants.BUNDLE_KEY_EXPEDITIES)
-
-        if (expedities != null)
-            showExpedities(expedities)
-        else {
-            showProgress(true)
-            GetExpeditiesTask(this).execute()
-        }
+        GetExpeditiesTask(this).execute()
     }
 
-    fun showExpedities(expedities: List<Expeditie>) =
-            recyclerView?.run {
-                adapter = ExpeditieCardRecyclerViewAdapter(expedities, ::onListFragmentInteraction)
-            }
+    fun showExpedities(expedities: List<Expeditie>) {
+        recyclerView?.run {
+            adapter = ExpeditieCardRecyclerViewAdapter(expedities, ::onListFragmentInteraction)
+        }
+    }
 
     private fun onListFragmentInteraction(item: Expeditie?) {
         item?.let {
@@ -38,5 +32,5 @@ class ExpeditieSelectActivity : AppCompatActivity() {
         }
     }
 
-    fun showProgress(show: Boolean) = showOrHide(progress_bar, show)
+    fun showProgress(show: Boolean) = HelperFunctions.showOrHide(progress_bar, show)
 }
