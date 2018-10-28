@@ -2,7 +2,6 @@ package nl.expeditiegrensland.tracker
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -11,7 +10,7 @@ import kotlinx.android.synthetic.main.activity_login.*
 import nl.expeditiegrensland.tracker.helpers.ActivityHelper
 import nl.expeditiegrensland.tracker.helpers.PreferenceHelper
 import nl.expeditiegrensland.tracker.helpers.showOrHide
-import nl.expeditiegrensland.tracker.tasks.AuthTask
+import nl.expeditiegrensland.tracker.backend.tasks.AuthTask
 
 
 class LoginActivity : AppCompatActivity() {
@@ -41,7 +40,7 @@ class LoginActivity : AppCompatActivity() {
 
         sign_in_button.setOnClickListener { attemptLogin() }
 
-        val token = PreferenceHelper.getToken(applicationContext)
+        val token = PreferenceHelper.getToken(this)
 
         Log.v("TokenStatus", token)
     }

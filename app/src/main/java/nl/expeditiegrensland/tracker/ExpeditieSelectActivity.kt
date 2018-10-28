@@ -6,7 +6,7 @@ import kotlinx.android.synthetic.main.activity_expeditie_select.*
 import nl.expeditiegrensland.tracker.helpers.ActivityHelper
 import nl.expeditiegrensland.tracker.helpers.PreferenceHelper
 import nl.expeditiegrensland.tracker.helpers.showOrHide
-import nl.expeditiegrensland.tracker.tasks.GetExpeditiesTask
+import nl.expeditiegrensland.tracker.backend.tasks.GetExpeditiesTask
 import nl.expeditiegrensland.tracker.types.Expeditie
 
 class ExpeditieSelectActivity : AppCompatActivity() {

@@ -1,4 +1,4 @@
-package nl.expeditiegrensland.tracker.tasks
+package nl.expeditiegrensland.tracker.helpers
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory

@@ -1,8 +1,10 @@
-package nl.expeditiegrensland.tracker.helpers
+package nl.expeditiegrensland.tracker.backend
 
 import android.util.Log
 import nl.expeditiegrensland.tracker.Constants
-import nl.expeditiegrensland.tracker.types.*
+import nl.expeditiegrensland.tracker.backend.types.AuthResponse
+import nl.expeditiegrensland.tracker.backend.types.BackendException
+import nl.expeditiegrensland.tracker.types.Expeditie
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -16,7 +18,14 @@ object BackendHelper {
         GET, POST
     }
 
-    private fun request(requestType: RequestType, relativeURL: String, json: JSONObject? = null, token: String? = null): BackendResult {
+    private data class BackendResponse(val responseCode: Int,
+                                       val content: String? = null)
+
+    private fun request(requestType: RequestType,
+                        relativeURL: String,
+                        json: JSONObject? = null,
+                        token: String? = null): BackendResponse {
+
         val url = URL(Constants.BACKEND_URL + relativeURL)
 
         var responseCode: Int? = null
@@ -57,7 +66,7 @@ object BackendHelper {
             Log.e("BACKEND", Log.getStackTraceString(err))
         }
 
-        return BackendResult(
+        return BackendResponse(
                 responseCode = responseCode
                         ?.let { it }
                         ?: HttpURLConnection.HTTP_CLIENT_TIMEOUT,
@@ -71,68 +80,61 @@ object BackendHelper {
     private fun postRequest(relativeURL: String, json: JSONObject, token: String? = null) =
             request(RequestType.POST, relativeURL, json, token)
 
-    fun authenticate(username: String, password: String): AuthResult {
+    fun authenticate(username: String, password: String): AuthResponse {
         val json = JSONObject()
                 .put("username", username)
                 .put("password", password)
 
         val (responseCode, jsonContent) = postRequest("/authenticate", json)
 
-        if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED)
-            return AuthResult(false)
+        if (responseCode != HttpURLConnection.HTTP_OK)
+            throw BackendException(responseCode)
 
-        if (responseCode == HttpURLConnection.HTTP_OK && jsonContent != null)
-            try {
-                val content = JSONObject(jsonContent)
-
-                return AuthResult(
-                        token = content.getString("token"),
-                        name = content.getString("name")
-                )
-            } catch (err: JSONException) {
-                Log.e("Authenticate", Log.getStackTraceString(err))
-            }
-
-        throw BackendException()
-    }
-
-    private fun parseExpeditie(jsonExpeditie: JSONObject?) =
-        try {
-            jsonExpeditie?.run{
-                Expeditie(
-                        getString("id"),
-                        getString("name"),
-                        getString("subtitle"),
-                        getString("image")
+        return try {
+            JSONObject(jsonContent ?: throw JSONException("Argument 'json' is null")).run {
+                AuthResponse(
+                        token = getString("token"),
+                        name = getString("name")
                 )
             }
         } catch (err: JSONException) {
-            Log.e("GET_EXPEDITIES", Log.getStackTraceString(err))
-            null
+            throw BackendException(responseCode, "Invalid response: ${err.message}")
         }
+    }
 
-    fun getExpedities(token: String): ExpeditiesResult {
-        val (responseCode, jsonContent) = getRequest("/expedities", token)
-
-        if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED)
-            throw AuthException()
-
-        if (responseCode == HttpURLConnection.HTTP_OK && jsonContent != null)
+    private fun parseExpeditie(jsonExpeditie: JSONObject?) =
             try {
-                val content = JSONArray(jsonContent)
-                val expedities = mutableListOf<Expeditie>()
-
-                for (i in 0 until content.length())
-                    parseExpeditie(content.optJSONObject(i))
-                            ?.let { expedities.add(it) }
-
-                return ExpeditiesResult(
-                        expedities = expedities
-                )
+                jsonExpeditie?.run {
+                    Expeditie(
+                            id = getString("id"),
+                            name = getString("name"),
+                            subtitle = getString("subtitle"),
+                            image = getString("image")
+                    )
+                }
             } catch (err: JSONException) {
-                Log.e("Authenticate", Log.getStackTraceString(err))
+                Log.e("ParseExpeditie", Log.getStackTraceString(err))
+                null
             }
 
-        throw BackendException()
+    fun getExpedities(token: String): List<Expeditie> {
+        val (responseCode, jsonContent) = getRequest("/expedities", token)
+
+        if (responseCode != HttpURLConnection.HTTP_OK)
+            throw BackendException(responseCode)
+
+        return try {
+            JSONArray(jsonContent ?: throw JSONException("Argument 'json' is null")).run {
+                val expedities = mutableListOf<Expeditie>()
+
+                for (i in 0 until length())
+                    parseExpeditie(optJSONObject(i))
+                            ?.let { expedities.add(it) }
+
+                expedities
+            }
+        } catch (err: JSONException) {
+            throw BackendException(responseCode, "Invalid response: ${err.message}")
+        }
     }
 }

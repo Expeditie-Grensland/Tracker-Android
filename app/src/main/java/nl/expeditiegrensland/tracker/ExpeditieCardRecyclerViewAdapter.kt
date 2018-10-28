@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_expeditie_card.view.*
-import nl.expeditiegrensland.tracker.tasks.DownloadImageTask
+import nl.expeditiegrensland.tracker.helpers.DownloadImageTask
 import nl.expeditiegrensland.tracker.types.Expeditie
 
 
