@@ -107,6 +107,7 @@ object BackendHelper {
                             id = getString("id"),
                             name = getString("name"),
                             subtitle = getString("subtitle"),
+                            color = getString("color"),
                             image = getString("image")
                     )
                 }

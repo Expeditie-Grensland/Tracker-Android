@@ -1,5 +1,6 @@
 package nl.expeditiegrensland.tracker.layout.expeditieselect
 
+import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -28,9 +29,9 @@ class ExpeditieCardRecyclerViewAdapter(private val expedities: List<Expeditie>,
         with(holder.view) {
             name.text = item.name
             subtitle.text = item.subtitle
+            image.setBackgroundColor(Color.parseColor(item.color))
 
-            DownloadImageTask(image)
-                    .execute(Constants.BASE_URL + item.image)
+            DownloadImageTask(image).execute(Constants.BASE_URL + item.image)
 
 
             setOnClickListener {
