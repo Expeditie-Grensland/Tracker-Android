@@ -3,7 +3,6 @@ package nl.expeditiegrensland.tracker.layout.expeditieselect
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_expeditie_select.*
-import nl.expeditiegrensland.tracker.Constants
 import nl.expeditiegrensland.tracker.R
 import nl.expeditiegrensland.tracker.helpers.ActivityHelper
 import nl.expeditiegrensland.tracker.helpers.HelperFunctions
@@ -19,7 +18,7 @@ class ExpeditieSelectActivity : AppCompatActivity() {
     }
 
     fun showExpedities(expedities: List<Expeditie>) {
-        recyclerView?.run {
+        recycler_view?.run {
             adapter = ExpeditieCardRecyclerViewAdapter(expedities, ::onListFragmentInteraction)
         }
     }
