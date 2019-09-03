@@ -1,7 +1,6 @@
 package nl.expeditiegrensland.tracker.backend
 
 import android.util.Log
-import nl.expeditiegrensland.tracker.Constants
 import nl.expeditiegrensland.tracker.types.Expeditie
 import org.json.JSONArray
 import org.json.JSONException
@@ -12,6 +11,9 @@ import java.net.URL
 import java.nio.charset.StandardCharsets
 
 object BackendHelper {
+    const val BASE_URL = "https://expeditiegrensland.nl"
+    private const val BACKEND_URL = "$BASE_URL/app-backend"
+
     private enum class RequestType {
         GET, POST
     }
@@ -24,7 +26,7 @@ object BackendHelper {
                         json: JSONObject? = null,
                         token: String? = null): BackendResponse {
 
-        val url = URL(Constants.BACKEND_URL + relativeURL)
+        val url = URL(BACKEND_URL + relativeURL)
 
         var responseCode: Int? = null
         var content: String? = null

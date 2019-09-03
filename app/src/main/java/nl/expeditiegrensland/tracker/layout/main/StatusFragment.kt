@@ -10,10 +10,9 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.fragment_expeditie_card.view.*
-import kotlinx.android.synthetic.main.fragment_status.*
 import kotlinx.android.synthetic.main.fragment_status.view.*
-import nl.expeditiegrensland.tracker.Constants
 import nl.expeditiegrensland.tracker.R
+import nl.expeditiegrensland.tracker.backend.BackendHelper
 import nl.expeditiegrensland.tracker.glide.GlideApp
 import nl.expeditiegrensland.tracker.helpers.PreferenceHelper
 import nl.expeditiegrensland.tracker.types.Expeditie
@@ -42,7 +41,7 @@ class StatusFragment : Fragment() {
                 subtitle.text = expeditie.subtitle
 
                 GlideApp.with(this)
-                        .load(Constants.BASE_URL + expeditie.image)
+                        .load(BackendHelper.BASE_URL + expeditie.image)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .placeholder(ColorDrawable(Color.parseColor(expeditie.color)))
                         .into(image)
